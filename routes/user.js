@@ -6,7 +6,7 @@ const uid2 = require("uid2");
 
 router.post('/signup', async (req,res) => {
     try {
-        const { email, username, phone, password} = req.fields
+        let { email, username, phone, password} = req.fields
 
         email = email.trim()
         username = username.trim()
