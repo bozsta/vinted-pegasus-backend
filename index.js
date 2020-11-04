@@ -15,13 +15,13 @@ app.use(formidable())
 app.use(cors)
 
 // Routes
-const userRoutes = require('./routes/user')
-app.use('/user', userRoutes)
-const offerRoutes = require('./routes/offers')
-app.use('/offer', offerRoutes)
+// const userRoutes = require('./routes/user')
+// // app.use('/user', userRoutes)
+// const offerRoutes = require('./routes/offers')
+// app.use('/offer', offerRoutes)
 
 app.all('*', (req, res) => {
- res.status(404).json({ message: 'URL not found'})
+  res.status(404).json({ message: 'URL not found'})
 })
 
 app.listen(process.env.PORT, () => {

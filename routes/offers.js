@@ -5,9 +5,9 @@ const Accounts = require('../models/account')
 const Offers = require('../models/offers')
 
 cloudinary.config({
-    cloud_name: "vinted-pegasus",
-    api_key: "942957996145417",
-    api_secret: "g3PO0LmPzLFTFkLv6_neYcGpPko"
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
   });
 
 
@@ -80,7 +80,7 @@ router.post('/publish', isAuthenticated, async (req, res) => {
             product_details: [
                 { condition },
                 { city },
-                { brand }, 
+                { brand },
                 { size },
                 { color }
             ],
