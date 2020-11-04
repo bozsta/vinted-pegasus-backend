@@ -15,14 +15,18 @@ router.get('/', async (req, res) => {
     try {
         const { title, priceMin, priceMax, sort, page, itemPerPage } = req.query
 
-        const option = { 
+       /*  const option = { 
             product_price: {
                 $gte: 0
             }
-         } 
+         }  */
+         const option = {} 
          if (title) {
              option.product_name = new RegExp(title, 'i')
          }
+        if(priceMin || priceMax) {
+            option.product_price = {}
+        }
         if (priceMin) {
             option.product_price.$gte = Number(priceMin)
         }
@@ -30,7 +34,7 @@ router.get('/', async (req, res) => {
             option.product_price.$lte = Number(priceMax)
         }
         let limit = 0
-       let toSkip = 0
+        let toSkip = 0
         let order = undefined
         if (page) {
             limit = itemPerPage && isNaN(itemPerPage) ? 0 : Number(itemPerPage)
@@ -42,7 +46,7 @@ router.get('/', async (req, res) => {
         if (sort) {
             let dir = sort.toLowerCase()
             if (dir !== 'price-desc' && dir !== 'price-asc') {
-                throw Error('sort keyword not reconized')
+                throw Error('sort query params wrong format (expected: price-[asc|desc]')
             }
            dir = dir === "price-desc" ? "desc" : "asc"
            order = { product_price : dir }
@@ -56,7 +60,7 @@ router.get('/', async (req, res) => {
             .limit(limit)
             .skip(toSkip)
                                 
-        const count = await Offers.countDocuments({option})
+        const count = await Offers.countDocuments(option)
 
         res.status(200).json({
             count: count,
@@ -199,4 +203,5 @@ router.get('/:id', async (req, res) => {
         res.status(400).json({ error: { message: error.message } })
     }
 })
+
 module.exports = router
