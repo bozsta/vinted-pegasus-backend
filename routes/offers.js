@@ -9,11 +9,6 @@ router.get('/', async (req, res) => {
     try {
         const { title, priceMin, priceMax, sort, page, itemPerPage } = req.query
 
-       /*  const option = { 
-            product_price: {
-                $gte: 0
-            }
-         }  */
          const option = {} 
          if (title) {
              option.product_name = new RegExp(title, 'i')
@@ -67,6 +62,7 @@ router.get('/', async (req, res) => {
 // http://localhost:3000/offer/publish
 router.post('/publish', isAuthenticated, async (req, res) => {
     try {
+
         const { title, description, price, condition, city, brand, size, color} = req.fields
         const picture = req.files.picture
         const { user } = req
@@ -107,16 +103,21 @@ router.post('/publish', isAuthenticated, async (req, res) => {
                 product_image: newOffer.product_image
             })
         } else {
-            res.status(400).json({ error: { message: erros.message } }) 
+            res.status(400).json({ error: { message: error.message } }) 
         }
-    } catch (error) { res.status(400).json({ error: { message: erros.message } }) }
+    } catch (error) { res.status(400).json({ error: { message: error.message } }) }
 })
 
 router.put('/delete', isAuthenticated, async (req, res) => {
     try {
         const { offerId } = req.fields
+        const user = req.user
         const offer = await Offers.findById(offerId)
+
         if (offer) {
+            if (!offer.owner.equals(user._id)) {
+                throw Error('Unauthorized')
+            }
             await offer.deleteOne({id: offerId})
             await cloudinary.api.delete_resources([offer.product_image.public_id])
             await cloudinary.api.delete_folder(`/offers/${offerId}`)
@@ -135,8 +136,15 @@ router.put('/update', isAuthenticated, async (req, res) => {
         const picture = req.files.picture
 
         const offer = await Offers.findById(offerId)
-
-        await cloudinary.api.delete_resources(offer.product_image.public_id)
+       
+        const user = req.user
+        if (offer) {
+            if (!offer.owner.equals(user._id)) {
+                throw Error('Unauthorized')
+            }
+            await cloudinary.api.delete_resources(offer.product_image.public_id)
+        }
+       
         const result = await cloudinary.uploader.upload(picture.path, { folder: `/offers/${offer._id}` })
         if (result) {
             if (title) {
