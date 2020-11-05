@@ -2,8 +2,16 @@ const express = require('express')
 const formidable = require('express-formidable')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const cloudinary = require("cloudinary").v2;
+
 
 require('dotenv').config()
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const app = express()
 app.use(formidable())

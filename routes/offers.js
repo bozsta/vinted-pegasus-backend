@@ -1,14 +1,8 @@
 const router = require('express').Router()
-const cloudinary = require("cloudinary").v2;
 const isAuthenticated = require('../middleware/isAuthenticated')
 const Accounts = require('../models/account')
 const Offers = require('../models/offers')
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-  });
+const cloudinary = require("cloudinary").v2;
 
 
 router.get('/', async (req, res) => {
