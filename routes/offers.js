@@ -82,7 +82,7 @@ router.post('/publish', isAuthenticated, async (req, res) => {
             owner: user
         })
 
-        const result = await cloudinary.uploader.upload(picture.path, { folder: `/offers/${newOffer._id}` })
+        const result = await cloudinary.uploader.upload(picture.path, { folder: `vinted/offers/${newOffer._id}` })
 
         if (result.secure_url) {
             newOffer.product_image = {
