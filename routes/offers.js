@@ -145,7 +145,7 @@ router.put('/update', isAuthenticated, async (req, res) => {
             await cloudinary.api.delete_resources(offer.product_image.public_id)
         }
        
-        const result = await cloudinary.uploader.upload(picture.path, { folder: `/offers/${offer._id}` })
+        const result = await cloudinary.uploader.upload(picture.path, { folder: `vinted/offers/${offer._id}` })
         if (result) {
             if (title) {
                 offer.product_name = title
