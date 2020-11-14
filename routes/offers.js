@@ -120,7 +120,7 @@ router.put('/delete', isAuthenticated, async (req, res) => {
             }
             await offer.deleteOne({id: offerId})
             await cloudinary.api.delete_resources([offer.product_image.public_id])
-            await cloudinary.api.delete_folder(`/offers/${offerId}`)
+            await cloudinary.api.delete_folder(`vinted/offers/${offerId}`)
 
             res.status(200).json({ message: 'Offer deleted'})
         } else {
